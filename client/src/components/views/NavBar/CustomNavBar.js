@@ -49,6 +49,7 @@ function CustomNavBar(props) {
     useEffect(() => {
         dispatch(auth()).then(
             res=>{
+                console.log("NAV")
                 setAuth(res.payload.isAuth);
             }
             
@@ -60,11 +61,10 @@ function CustomNavBar(props) {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
-                <Nav.Link href="/">Home</Nav.Link>
-                <Nav.Link href="#link">Link</Nav.Link>
+                <Nav.Link href="/post">Post</Nav.Link>
+                <Nav.Link href="/manage">Manage</Nav.Link>
                 </Nav>
                 <Nav>
-                    
                     <RenderButton Auth={Auth} history = {props.history}/>
                 </Nav>
             </Navbar.Collapse>

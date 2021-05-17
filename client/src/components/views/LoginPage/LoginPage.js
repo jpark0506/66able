@@ -4,7 +4,8 @@ import {loginUser} from '../../../_actions/user_action';
 import {withRouter} from 'react-router-dom';
 import CustomNavBar from '../NavBar/CustomNavBar';
 import { Container,Row,Col,Form,FormControl,Button } from 'react-bootstrap';
-import {center,backgroundcenter} from '../../../style/style'
+import {center,backgroundcenter,inputStyle, buttonStyle, formStyle} from '../../../style/style'
+
 function LoginPage(props) {
 
     const dispatch = useDispatch();
@@ -43,30 +44,27 @@ function LoginPage(props) {
         //object로 바꾸자 
         <Container fluid='true' style={backgroundcenter}>
             <CustomNavBar/>
-            <Container style={center}>
+            <Container>
                 <Row>
                     <Col>
-                        <h1>
+                        <h1 style = {{marginTop:'100px'}}>
                             Login
                         </h1>
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <Form onSubmit={onSubmitHandler}>
-                            <Form.Group controlId="formBasicEmail">
+                        <Form onSubmit={onSubmitHandler} >
+                            <Form.Group size='lg' controlId="formBasicEmail" >
                                 <Form.Label>Email address</Form.Label>
-                                <Form.Control type="email" placeholder="Enter email" onChange={onEmailHandler}/>
+                                <Form.Control autoFocus type="email" placeholder="Enter email" onChange={onEmailHandler}/>
                             </Form.Group>
 
-                            <Form.Group controlId="formBasicPassword">
+                            <Form.Group size='lg' controlId="formBasicPassword">
                                 <Form.Label>Password</Form.Label>
                                 <Form.Control type="password" placeholder="Password" onChange={onPasswordHandler}/>
                             </Form.Group>
-                            <Form.Group controlId="formBasicCheckbox">
-                                <Form.Check type="checkbox" label="Check me out" />
-                            </Form.Group>
-                            <Button variant="primary" type="submit">
+                            <Button size = 'lg' variant="primary" type="submit" >
                                 Submit
                             </Button>
                         </Form>

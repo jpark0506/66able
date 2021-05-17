@@ -18,7 +18,7 @@ export function registerUser(data){
     .then(res => 
         res.data
     )
-
+        
     return{
         type: REGISTER_USER,
         payload : request

@@ -1,10 +1,11 @@
 
 import React,{useState} from 'react'
 import { Container } from 'react-bootstrap';
+import {withRouter} from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import {registerUser} from '../../../_actions/user_action';
 import CustomNavBar from '../NavBar/CustomNavBar';
-import { Button} from 'react-bootstrap';
+import { Button ,Form, Col, Row} from 'react-bootstrap';
 function RegisterPage(props) {
     const dispatch = useDispatch();
 
@@ -45,9 +46,11 @@ function RegisterPage(props) {
         dispatch(registerUser(body))
         .then(res => {
             if(res.payload.success){
+                
                 props.history.push("/login")
             }
             else{
+                console.log(res);
                 alert('Failed!')
             }
         })
@@ -56,32 +59,44 @@ function RegisterPage(props) {
     return (
         <Container fluid='true' style={{height:'100vh'}}>
             <CustomNavBar/>
-            <Container fluid='true'>
-            
-            
-            <div style = {{display:'flex', justifyContent:'center', alignItems:'center' }}>
+            <Container>
+                <Row>
+                    <Col>
+                        <h1 style = {{marginTop:'100px'}}>
+                            Register
+                        </h1>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Form onSubmit={onSubmitHandler} >
+                            <Form.Group size='lg' controlId="formBasicEmail" >
+                                <Form.Label>Email address</Form.Label>
+                                <Form.Control autoFocus type="email" placeholder="Enter email" onChange={onEmailHandler}/>
+                            </Form.Group>
+                            <Form.Group size='lg' controlId="formBasicName">
+                                <Form.Label>Password</Form.Label>
+                                <Form.Control type="text" placeholder="Enter name" onChange={onNameHandler}/>
+                            </Form.Group>
+                            <Form.Group size='lg' controlId="formBasicPassword">
+                                <Form.Label>Password</Form.Label>
+                                <Form.Control type="password" placeholder="Password" onChange={onPasswordHandler}/>
+                            </Form.Group>
+                            <Form.Group size='lg' controlId="formBasicPasswordCheck">
+                                <Form.Label>Password</Form.Label>
+                                <Form.Control type="password" placeholder="Password" onChange={onConfirmPasswordHandler}/>
+                            </Form.Group>
+                            <Button size = 'lg' variant="primary" type="submit" >
+                                Submit
+                            </Button>
+                        </Form>
+                    </Col>
+                </Row>
                 
-                <form style={{display:'flex', flexDirection:'column'}}
-                    onSubmit={onSubmitHandler}
-                >
-                    <label>Email</label>
-                    <input type="email" value={Email} onChange={onEmailHandler} ></input>
-                    <label>Name</label>
-                    <input type="text" value={Name} onChange={onNameHandler} ></input>
-                    <label>Password</label>
-                    <input type="password" value={Password} onChange={onPasswordHandler} ></input>
-                    <label>Confirm Password</label>
-                    <input type="password" value={ConfirmPassword} onChange={onConfirmPasswordHandler} ></input>
-                    <br/>
-                    <Button type = "submit">
-                        회원 가입
-                    </Button>
-                </form>
-            </div>
-        </Container>
+            </Container>
         </Container>
         
     )
 }
 
-export default RegisterPage
+export default withRouter(RegisterPage)

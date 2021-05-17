@@ -7,6 +7,7 @@ const config = require('./config/key');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const {auth} = require('./middleware/auth');
+const {Post} = require('./models/post');
 mongoose.connect(config.mongoURI,{
     useNewUrlParser: true, useCreateIndex:true,useUnifiedTopology:true,useFindAndModify:false
 }).then(()=>console.log(`Mongo DB Connect Success!`))
@@ -17,11 +18,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-
-app.get('/api/hello', (req,res)=>res.send("안녕하세요"))
-
-app.get('/', (req,res)=> res.send('Hello World!'))
-
+//users api
 
 app.post('/api/users/register',(req,res)=>{
     const user = new User(req.body);
@@ -67,7 +64,6 @@ app.get('/api/users/auth',auth,(req,res)=>{
         name: req.user.name
     })
 })
-
 app.get('/api/users/logout',auth,(req,res)=>{
 
     User.findOneAndUpdate(
@@ -82,9 +78,50 @@ app.get('/api/users/logout',auth,(req,res)=>{
             })
         }
     )
+})
 
+app.get('api/users/:id/profile',(req,res)=>{
+    //req.params .id
+})
+
+// api post
+
+
+app.get('/api/post',(req,res)=>{
+    Post.find().populate('author').where('isTemp').equals(false).limit(10)
+    .then(
+        data=>res.json(data)
+    ).catch(err=>console.log(err))
+    
+})
+app.get('/api/post/:id', (req,res)=>{
+    Post.findOne({_id: req.params.id}).then(
+        data=>res.status(200).json({ postSuccess:true,data})
+    ).catch(err=>res.json({postSuccess:false, err:err}))
+})
+app.post('/api/post/create',(req,res)=>{
+    const post = new Post(req.body);
+    post.save().then(
+        ()=>res.status(200).json({postSuccess:true})
+    ).catch(err => res.json({postSuccess:false, err:err}));
 
 })
+
+// api manage
+
+app.get('api/manage/users',(req,res)=>{
+    User.find({}).then(data=>{
+        res.send(data);
+    })
+})
+
+app.get('api/manage/posts',(req,res)=>{
+    Post.find({}).then(data=>{
+        res.send(data);
+    })
+
+})
+
 
 
 app.listen(port, ()=> console.log(`App listening at ${port}`))
