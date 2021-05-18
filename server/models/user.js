@@ -5,6 +5,16 @@ const jwt = require('jsonwebtoken');
 
 
 const userSchema = mongoose.Schema({
+    provider:{
+        type:String,
+        maxlength:10,
+        default:"custom"
+    },
+    kakaoid:{
+        type:String,
+        maxlength:40,
+        default:"none"
+    },
     name:{
         type : String,
         maxlength: 30

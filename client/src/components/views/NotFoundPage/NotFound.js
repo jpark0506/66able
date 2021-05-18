@@ -1,10 +1,15 @@
 import React from 'react'
+import CustomNavBar from '../NavBar/CustomNavBar'
 
 function NotFound() {
     return (
-        <div>
-            404 Not Found;
-        </div>
+        <>
+            <CustomNavBar></CustomNavBar>
+            <div>
+                404 Not Found;
+            </div>
+        </>
+        
     )
 }
 

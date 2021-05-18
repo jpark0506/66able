@@ -5,7 +5,8 @@ import {withRouter} from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import {registerUser} from '../../../_actions/user_action';
 import CustomNavBar from '../NavBar/CustomNavBar';
-import { Button ,Form, Col, Row} from 'react-bootstrap';
+import { Button ,Form, Col, Row,Image} from 'react-bootstrap';
+const {Kakao} = window;
 function RegisterPage(props) {
     const dispatch = useDispatch();
 
@@ -13,6 +14,14 @@ function RegisterPage(props) {
     const [Password, setPassword] = useState("")
     const [Name, setName] = useState("")
     const [ConfirmPassword, setConfirmPassword] = useState("")
+
+    const loginWithKakao = async () => {
+        Kakao.Auth.authorize({
+            redirectUri:"http://localhost:3000/kakao",
+            scope:'profile,account_email,talk_message',
+        })
+    }
+
     const onEmailHandler = (e) => {
         setEmail(e.currentTarget.value);
     }
@@ -90,6 +99,14 @@ function RegisterPage(props) {
                                 Submit
                             </Button>
                         </Form>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col className="mt-3">
+                        <Image  src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg"
+                        style={{width:'222px'}}
+                        onClick={loginWithKakao}
+                        />
                     </Col>
                 </Row>
                 

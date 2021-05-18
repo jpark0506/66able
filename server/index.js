@@ -8,6 +8,10 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const {auth} = require('./middleware/auth');
 const {Post} = require('./models/post');
+const axios = require('axios');
+const router = express.Router();
+
+
 mongoose.connect(config.mongoURI,{
     useNewUrlParser: true, useCreateIndex:true,useUnifiedTopology:true,useFindAndModify:false
 }).then(()=>console.log(`Mongo DB Connect Success!`))
@@ -18,7 +22,113 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-//users api
+app.get('/api/kakao/logout/:id',(req,res)=>{
+    let id = req.params.id;
+    User.findOneAndUpdate(
+        {kakaoid:id},
+        {token:""},
+        (err,user)=>{
+            if(err){
+                return res.json({ success:false, err});
+            }
+            return res.status(200).send({
+                success:true
+            })
+        }
+        )
+})
+
+app.post('/api/kakao',async (req,res)=>{
+    //카카오 로그인 하기
+    
+    const AUTHORIZATION_CODE= req.body.authorizationCode;
+    const REST_API_KEY= "351d2b8fedd2b491486182039c85736e";
+    const REDIRECT_URI = "http://localhost:3000/kakao"
+    let kakaodata = {}
+    try{
+        //code를 이용해서 토큰 받아오기
+        await axios.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&code=${AUTHORIZATION_CODE}&scope=${["profile","account_email,talk_message"]}`)
+        .then(data=>data.data)
+        .then(async (data)=>{
+            //토큰을 이용해서 개인정보를 받아 올 수 있는 api 가져오기
+            kakaodata.access_token = data.access_token;
+
+            await axios(
+            {
+                method:"post",
+                url:"https://kapi.kakao.com/v2/user/me",
+                headers:{"Authorization": `Bearer ${data.access_token}`},
+                params:{
+                    "property_keys":["kakao_account.email","kakao_account.profile"]
+                }
+            }).then(profiledata =>{
+                let profile = profiledata;
+                return profile;
+            }).then(response=>{
+            kakaodata.profile = response.data;
+            return response.data;
+        })
+        .then(profile=>
+            {
+                User.findOne({kakaoid:profile.id},async (err,user)=>{
+                    if(!user){
+                        //받은 데이터의 카카오 아이디가 없다면
+                        //provider->kakao
+                        //role->0 (Non Admin)
+                        let body={
+                            provider:'kakao',
+                            kakaoid:`${profile.id}`,
+                            name: profile.properties.nickname,
+                            email:profile.kakao_account.email,
+                            role:0,
+                            image:profile.properties.profile_image,
+                            token:kakaodata.access_token
+                        }
+                        const user = new User(body)
+                        try{
+                            await user.save().then(()=>res.status(200).json({
+                                provider:'kakao',
+                                isnewuser:true,
+                                success:true,
+                                isAuth:true,
+                                accesstoken:kakaodata.access_token,
+                                profile: kakaodata.profile
+                            }))
+                        }catch(err){
+                            console.log(`UserCreateError : ${err}`)
+                        }
+                        
+
+                    }else{
+                        //받은 데이터의 카카오 아이디가 있다면
+                        //토큰을 업데이트 해준다
+                        try{
+                            await User.updateOne({kakaoid:profile.id},{$set: { token: kakaodata.access_token}})
+                            .then(()=>res.status(200).json({
+                                provider:'kakao',
+                                isnewuser:false,
+                                success:true,
+                                isAuth:true,
+                                accesstoken:kakaodata.access_token,
+                                profile: kakaodata.profile
+                            }))
+                        }catch(err){
+                            console.log(`UserUpdateError : ${err}`)
+                        }
+                        
+                    }
+                })
+            }
+        );
+        }) 
+    }catch(err){
+        console.log(err)
+    }
+})
+
+app.post('/api/kakao/register',(req,res)=>{
+
+})
 
 app.post('/api/users/register',(req,res)=>{
     const user = new User(req.body);
@@ -35,6 +145,9 @@ app.post('/api/users/login', (req,res)=>{
                 loginSuccess: false,
                 message: "No Email"
             })
+        }
+        if(err){
+            return res.json(err)
         }
         user.comparePassword(req.body.password,(err,isMatch)=>{
             if(!isMatch){

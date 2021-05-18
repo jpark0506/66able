@@ -3,6 +3,7 @@ import {useDispatch} from 'react-redux';
 import {auth} from '../_actions/user_action';
 const ACCESS_DENIED = "Access Denied, No Permission";
 const LOGIN_NEEDED = "Login needed"
+ 
 export default function (SpecificComponent, option, adminRoute = null){
     //null  => 아무나 출입
     //true  => 로그인 한 유저만 출입 가능
@@ -13,33 +14,42 @@ export default function (SpecificComponent, option, adminRoute = null){
         const [Name, setName] = useState("")
 
         const [Id, setId] = useState("")
-        
+
+        const [KakaoId, setKakaoId] = useState("")
+
         useEffect(()=> {
-            dispatch(auth())
-            .then(res=>{
-                console.log(res);
-                if(!res.payload.isAuth){
+            {
+                dispatch(auth())
+                .then(res=>{
+                    console.log(res);
+                    if(!res.payload.isAuth){
+                        if(localStorage.getItem('isAuth')){
+                            setName(JSON.parse(localStorage.getItem('profile')).properties.nickname)
+                            setKakaoId(JSON.parse(localStorage.getItem('profile')).id)
+                        }
                         if(option){
                             alert(LOGIN_NEEDED)
                             props.history.push('./login');
                         }
-                }else{
-                    if(adminRoute && !res.payload.isAdmin){
-                        alert(ACCESS_DENIED)
-                        props.history.push('./');
                     }else{
-                        if(option===false){
-                        alert(ACCESS_DENIED)
+                        if(adminRoute && !res.payload.isAdmin){
+                            alert(ACCESS_DENIED)
                             props.history.push('./');
+                        }else{
+                            if(option===false){
+                            alert(ACCESS_DENIED)
+                                props.history.push('./');
+                            }
+                            setName(res.payload.name);
+                            setId(res.payload._id);
                         }
-                        setName(res.payload.name);
-                        setId(res.payload._id);
                     }
-                }
-            })
-            
+                })
+            }
+
+
         },[])
-        return <SpecificComponent id = {Id} name = {Name}/>;
+        return <SpecificComponent history = {props.history} id = {Id} name = {Name} kakaoid = {KakaoId}/>;
     }
    return AuthenticationCheck;
 }

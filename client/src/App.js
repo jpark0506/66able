@@ -2,8 +2,8 @@
 import LandingPage from './components/views/LandingPage/LandingPage';
 import LoginPage from './components/views/LoginPage/LoginPage';
 import RegisterPage from './components/views/RegisterPage/RegisterPage';
-import ManageRouter from './components/views/ManagePage/ManageRouter';
 import PostRouter from './components/views/PostPage/PostRouter';
+import KakaoLogin from './components/views/LoginPage/KakaoLogin';
 import './App.css';
 import {
   BrowserRouter as Router,
@@ -25,7 +25,7 @@ function App() {
           <Route exact path="/register" component = {Auth(RegisterPage,false)}>
           </Route>
           <Route path="/post" component = {Auth(PostRouter,true)}></Route>
-          <Route exact path="/manage" component = {Auth(ManageRouter,true)}></Route>
+          <Route path="/kakao" component = {Auth(KakaoLogin,false)}></Route>
           <Route component = {Auth(NotFound,null)}></Route>
         </Switch>
       </div>

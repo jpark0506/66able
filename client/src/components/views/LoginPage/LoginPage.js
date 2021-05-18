@@ -3,11 +3,12 @@ import { useDispatch } from 'react-redux';
 import {loginUser} from '../../../_actions/user_action';
 import {withRouter} from 'react-router-dom';
 import CustomNavBar from '../NavBar/CustomNavBar';
-import { Container,Row,Col,Form,FormControl,Button } from 'react-bootstrap';
+import { Container,Row,Col,Form,FormControl,Button,Image } from 'react-bootstrap';
 import {center,backgroundcenter,inputStyle, buttonStyle, formStyle} from '../../../style/style'
-
+const {Kakao} = window;
 function LoginPage(props) {
 
+    
     const dispatch = useDispatch();
 
     const [Email, setEmail] = useState("")
@@ -37,7 +38,12 @@ function LoginPage(props) {
                 alert("Error")
             }
         })
-
+    }
+    const loginWithKakao = async () => {
+        Kakao.Auth.authorize({
+            redirectUri:"http://localhost:3000/kakao",
+            scope:'profile,account_email,talk_message',
+        })
     }
 
     return (
@@ -68,6 +74,14 @@ function LoginPage(props) {
                                 Submit
                             </Button>
                         </Form>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col className="mt-3">
+                        <Image  src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg"
+                        style={{width:'222px'}}
+                        onClick={loginWithKakao}
+                        />
                     </Col>
                 </Row>
                 
