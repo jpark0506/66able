@@ -1,17 +1,19 @@
 const express = require('express');
 const app = express();
 const port = 5000;
-const {User} = require('./models/user')
+//models는 SQL로 치면 새로운 테이블 같은 존재 입니다 해당 파일로 가보시면 object 형태로 작성이 되어있다는 것을 확인하실 수 있습니다.
+const {User} = require('./models/user');
+const {Post} = require('./models/post');
 const bodyParser = require('body-parser');
 const config = require('./config/key');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const {auth} = require('./middleware/auth');
-const {Post} = require('./models/post');
+
 const axios = require('axios');
 const router = express.Router();
 
-
+//mongodb 연결(mongoose 라이브러리 이용)
 mongoose.connect(config.mongoURI,{
     useNewUrlParser: true, useCreateIndex:true,useUnifiedTopology:true,useFindAndModify:false
 }).then(()=>console.log(`Mongo DB Connect Success!`))
@@ -19,11 +21,13 @@ mongoose.connect(config.mongoURI,{
 
 app.use(bodyParser.urlencoded({extended:true}));
 //json형식으로 변형
+
 app.use(bodyParser.json());
 app.use(cookieParser());
-
+//:id는 정규표현식(?)일 거 같아요 express docs에 나와있습니다!
 app.get('/api/kakao/logout/:id',(req,res)=>{
     let id = req.params.id;
+    //토큰이 없으면 로그아웃 상태로 판정합니다!
     User.findOneAndUpdate(
         {kakaoid:id},
         {token:""},
@@ -40,19 +44,18 @@ app.get('/api/kakao/logout/:id',(req,res)=>{
 
 app.post('/api/kakao',async (req,res)=>{
     //카카오 로그인 하기
-    
+    //KakaoLogin.js에서 인가코드를 받아왔습니다
     const AUTHORIZATION_CODE= req.body.authorizationCode;
     const REST_API_KEY= "351d2b8fedd2b491486182039c85736e";
     const REDIRECT_URI = "http://localhost:3000/kakao"
     let kakaodata = {}
     try{
-        //code를 이용해서 토큰 받아오기
+        //code를 이용해서 엑세스 토큰(만료 시간 김) 받아오기
         await axios.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&code=${AUTHORIZATION_CODE}&scope=${["profile","account_email,talk_message"]}`)
         .then(data=>data.data)
         .then(async (data)=>{
-            //토큰을 이용해서 개인정보를 받아 올 수 있는 api 가져오기
             kakaodata.access_token = data.access_token;
-
+            //토큰을 이용해서 개인정보를 받아 올 수 있는 api    
             await axios(
             {
                 method:"post",
@@ -61,10 +64,8 @@ app.post('/api/kakao',async (req,res)=>{
                 params:{
                     "property_keys":["kakao_account.email","kakao_account.profile"]
                 }
-            }).then(profiledata =>{
-                let profile = profiledata;
-                return profile;
             }).then(response=>{
+                //전역변수에 프로파일 데이터 작성
             kakaodata.profile = response.data;
             return response.data;
         })
@@ -96,9 +97,10 @@ app.post('/api/kakao',async (req,res)=>{
                             }))
                         }catch(err){
                             console.log(`UserCreateError : ${err}`)
+                            res.status(500).json({
+                                success:false
+                            })
                         }
-                        
-
                     }else{
                         //받은 데이터의 카카오 아이디가 있다면
                         //토큰을 업데이트 해준다
@@ -114,6 +116,9 @@ app.post('/api/kakao',async (req,res)=>{
                             }))
                         }catch(err){
                             console.log(`UserUpdateError : ${err}`)
+                            res.status(500).json({
+                                success:false
+                            })
                         }
                         
                     }
@@ -123,20 +128,20 @@ app.post('/api/kakao',async (req,res)=>{
         }) 
     }catch(err){
         console.log(err)
+        res.status(500).json({
+            success:false
+        })
     }
 })
 
-app.post('/api/kakao/register',(req,res)=>{
-
-})
-
+//회원 가입 api
 app.post('/api/users/register',(req,res)=>{
     const user = new User(req.body);
     user.save().then(
         ()=>res.status(200).json({success:true})
     ).catch(err => res.json({success:false, err:err}))
 })
-
+//로그인 api
 app.post('/api/users/login', (req,res)=>{
 
     User.findOne({email: req.body.email},(err,user)=>{
@@ -167,7 +172,7 @@ app.post('/api/users/login', (req,res)=>{
 
 
 })
-
+//토큰 O 로그인중 토큰 X 로그인중이 아님
 app.get('/api/users/auth',auth,(req,res)=>{
     res.status(200).json({
         _id:req.user._id,
@@ -177,6 +182,7 @@ app.get('/api/users/auth',auth,(req,res)=>{
         name: req.user.name
     })
 })
+//로그아웃 시 유저 아이디를 검색, 해당하는 유저의 토큰을 "" 로 삭제 
 app.get('/api/users/logout',auth,(req,res)=>{
 
     User.findOneAndUpdate(
@@ -193,9 +199,9 @@ app.get('/api/users/logout',auth,(req,res)=>{
     )
 })
 
-app.get('api/users/:id/profile',(req,res)=>{
-    //req.params .id
-})
+// app.get('api/users/:id/profile',(req,res)=>{
+//     req.params .id
+// })
 
 // api post
 
