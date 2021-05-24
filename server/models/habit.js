@@ -23,6 +23,8 @@ const habitSchema = new Schema({
       habittype: { type: Number },
     },
   ],
+  visibility:{type:Boolean},
+  achievement:[{type:Number}],
   public: { type: Number },
   tag: [{ type: String }],
 });

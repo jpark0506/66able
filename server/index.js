@@ -178,8 +178,7 @@ app.post("/api/users/login", (req, res) => {
       }
       user.genToken((err, user) => {
         if (err) return res.status(400).send(err);
-        res
-          .cookie("auth", user.token)
+        res.cookie("auth", user.token)
           .status(200)
           .json({ loginSuccess: true, userId: user._id });
       });
@@ -205,7 +204,7 @@ app.get('/api/users/logout',auth,(req,res)=>{
 // })
 
 // api post
-
+})
 app.get("/api/post", (req, res) => {
   Post.find()
     .populate("author")
@@ -376,4 +375,4 @@ app.get("api/manage/posts", (req, res) => {
   });
 });
 
-app.listen(port, () => console.log(`App listening at ${port}`));
+app.listen(port, () => {console.log(`App listening at ${port}`)})

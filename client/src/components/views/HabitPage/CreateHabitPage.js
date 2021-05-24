@@ -38,25 +38,25 @@ function CreateHabitPage(props) {
 
     const handleSubmit = () => {
         if(habit.get('wronghabit')!="" && habit.get('objective')!="" && habit.get('description')!=""&& habit.get("habit").size!=0&&habit.get("tag").size!=0){
-            //console.log(habit.toJS())
-            // if(confirm("등록하시겠습니까?")){
-            //     axios.post('/api/habit/create', habit).then(res=>
-            //         {
-            //             if(res.success){
-            //                 alert("등록되었습니다");
-            //                 props.history.goBack();
-            //             }else{
-            //                 alert("등록 실패");
+            console.log(habit.toJS())
+            if(confirm("등록하시겠습니까?")){
+                axios.post('/api/habit/create', habit).then(res=>
+                    {
+                        if(res.habitSuccess){
+                            alert("등록되었습니다");
+                            props.history.goBack();
+                        }else{
+                            alert("등록 실패");
                             
-            //             }
-            //         }
-            //     ).catch(err=>{
-            //         console.log(err);
-            //         alert("오류");
-            //     })
-            // }else{
-            //     alert('취소되었습니다')
-            // }
+                        }
+                    }
+                ).catch(err=>{
+                    console.log(err);
+                    alert("오류");
+                })
+            }else{
+                alert('취소되었습니다')
+            }
             console.log(habit.toJS());
             alert(habit.toJS());
 
