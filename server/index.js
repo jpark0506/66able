@@ -173,8 +173,9 @@ app.post('/api/users/login', (req,res)=>{
 
 })
 //토큰 O 로그인중 토큰 X 로그인중이 아님
-app.get('/api/users/auth',auth,(req,res)=>{
+app.post(/auth/,auth,(req,res)=>{
     res.status(200).json({
+        
         _id:req.user._id,
         isAdmin: req.user.role === 0? false:true,
         isAuth : true,

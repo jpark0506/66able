@@ -9,7 +9,7 @@ function PostPage({match,id}) {
         <div style = {{height:'100vh',width:"100vw",padding:'30px',paddingInline:'200px'}}>
             <div>
                 <div style={{ height:'100%', width:"100%",display:"inline-flex", justifyContent:"space-between"}}>
-                    <h1>Post</h1>
+                    <h1>Commmunity</h1>
                     <Link to={`${match.url}/${id}/create`} style={{}}>
                         <Button variant="primary" size="lg" >
                             Create Post

@@ -8,7 +8,7 @@ import ViewPostPage from './ViewPostPage';
 function PostRouter(props) {
     return (
         <div>
-            <CustomNavBar history={props.history}></CustomNavBar>
+            <CustomNavBar history={props.history} userid = {props.userid}></CustomNavBar>
             <Switch>
                     <Route exact path={props.match.path}  component = {Auth(PostPage,true)}>
                     </Route>

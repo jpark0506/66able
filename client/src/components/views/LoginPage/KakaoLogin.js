@@ -11,11 +11,13 @@ function KakaoLogin(props) {
               })
               .then(res => {
                 console.log('------client------')
+                console.log(res.data);
                 localStorage.setItem('provider', res.data.provider);
                 console.log(res.data.provider)
                 localStorage.setItem('isAuth', res.data.isAuth);
-                localStorage.setItem('AC_Token', res.data.accessToken)
+                localStorage.setItem('AC_Token', res.data.accesstoken)
                 localStorage.setItem('profile', JSON.stringify(res.data.profile));
+                localStorage.getItem('AC_Token');
                 console.log("LoginSuccess");
                 props.history.push(`/`);
               })

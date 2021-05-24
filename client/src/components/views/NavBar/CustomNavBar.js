@@ -2,10 +2,10 @@ import React, { useEffect,useState } from 'react'
 import {Link} from 'react-router-dom';
 import {useDispatch} from 'react-redux';
 import axios from 'axios';
-import { Nav ,Button, Navbar} from 'react-bootstrap';
+import { Nav ,Button, Navbar, NavDropdown} from 'react-bootstrap';
 import {auth} from '../../../_actions/user_action';
 const {Kakao} = window;
-function RenderButton({AuthInfo,history, Auth, NickName,Provider}){
+function RenderButton({AuthInfo,history, Auth, NickName,Provider,id}){
     //React Component는 항상 대문자로
     //props {history, Auth}
     const onClickHandler = () => {
@@ -49,13 +49,26 @@ function RenderButton({AuthInfo,history, Auth, NickName,Provider}){
         </>
         )
     }else{
+        console.log(id);
         return(
             <>
-                <Nav className="mr-auto" style={{ color:"white", fontWeight:"400"}}>
+                <Nav className="mr-1" style={{ color:"white", fontWeight:"400"}}>
                     <Nav.Link href="/user" active="true">
                         Hello {NickName}
                     </Nav.Link>
                 </Nav>
+                <NavDropdown className="mr-3" title="Manage" id="collasible-nav-dropdown">
+                    
+        
+                    
+                        <NavDropdown.Item>
+                            <Link to={`/manage`}>
+                                My Habits 
+                            </Link>
+                        </NavDropdown.Item>
+                    
+                </NavDropdown>
+                
                 <Nav>
                     <Button variant="primary" onClick={onClickHandler}>
                         Logout
@@ -74,6 +87,7 @@ function CustomNavBar(props) {
     const [AuthInfo, setAuthInfo] = useState({});
     const [NickName, setNickName] = useState("");
     const [Provider, setProvider] = useState("");
+    const [id, setID] = useState("");
     //useEffect는 최대한 상위객체로 올리자
     useEffect(() => {
         dispatch(auth()).then(
@@ -90,23 +104,25 @@ function CustomNavBar(props) {
                     setAuthInfo(res.payload);
                     setNickName(res.payload.isAuth.name);
                 }
+                console.log(props.userid);
                 
             }
             
         )
     }, [])
     return (
-        <Navbar bg="dark" variant="dark" expand="lg">
+        <Navbar  bg="dark" variant="dark" expand="lg">
             <Navbar.Brand style={{fontSize:'1.5em', fontWeight:"600"}} href="/">66able</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
-                <Nav.Link href="/post">Post</Nav.Link>
-                <Nav.Link href="/habits">Habits</Nav.Link>
+                <Nav.Link href="/post">Community</Nav.Link>
+                <Nav.Link href="/habit">Habits</Nav.Link>
                 </Nav>
                 
                 <Nav>
                     <RenderButton 
+                    id={props.userid}
                     Provider={Provider}
                     AuthInfo={AuthInfo}
                     Auth={Auth} 
