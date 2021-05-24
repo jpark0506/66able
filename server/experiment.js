@@ -1,0 +1,11 @@
+// var a = new Date();
+// var kr = a.toUTCString();
+// var kr_t = new Date(kr + 9 * 60 * 60 * 1000);
+// console.log(a);
+// console.log(kr);
+// console.log(kr_t.getHours());
+// console.log(kr_t.getMinutes());
+// console.log(kr_t.getSeconds());
+// console.log(a.getUTCHours());
+// console.log(a.getUTCMinutes());
+// console.log(a.getUTCSeconds());
