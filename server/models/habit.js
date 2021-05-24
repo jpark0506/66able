@@ -24,6 +24,9 @@ const habitSchema = new Schema({
   tag: [{ type: String }],
   creator: { type: ObjectId, ref: "User" },
   description: { type: String },
+  achievement: [
+    { userid: { type: ObjectId, ref: "User" }, data: [{ type: Number }] },
+  ],
 });
 const Habit = mongoose.model("Habit", habitSchema);
 module.exports = { Habit };
