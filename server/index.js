@@ -228,11 +228,19 @@ app.post("/api/post/create", (req, res) => {
 });
 
 //api habit
-app.get("/api/habit", (req, res) => {
-  Habit.find()
-    .populate("users")
-    .then((data) => res.json(data))
-    .catch((err) => console.log(err));
+app.get("/api/habit/:num/:start", (req, res) => {
+  Habit.countDocuments((err, count) => {
+    Habit.find()
+      .populate("users")
+      .sort({ _id: -1 })
+      .limit(Number(req.params.num))
+      .skip(Number(req.params.start))
+      .then((data) => {
+        var a = { total: count, data };
+        res.json(a);
+      })
+      .catch((err) => console.log(err));
+  });
 });
 app.get("/api/habit/:id", (req, res) => {
   Habit.findOne({ _id: req.params.id })
