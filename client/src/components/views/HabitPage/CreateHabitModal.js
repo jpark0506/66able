@@ -3,7 +3,7 @@ import {Form, Col,Button,Modal, PageItem} from 'react-bootstrap';
 import {Map,get,update,List,push} from 'immutable';
 function CreateHabitModal({item,show, handleClose, handleCreateHabit,handleUpdateHabit}) {
     const onSubmitHandler = () => {
-        if(specific.get('signal')!="" && specific.get('wronghabit')!=""&&specific.get('habit')!=""&&specific.get('habittime')!=""&&specific.get('habittype')!=""){
+        if(specific.get('signal')!="" &&specific.get('habit')!=""&&specific.get('habittime')!=""&&specific.get('habittype')!=""){
             console.log(`Submit Habit Modal with ${specific}`)
             handleCreateHabit(specific);
             handleClose();
@@ -14,7 +14,7 @@ function CreateHabitModal({item,show, handleClose, handleCreateHabit,handleUpdat
     }
 
     const onUpdateHandler = () => {
-        if(specific.get('signal')!="" && specific.get('wronghabit')!=""&&specific.get('habit')!=""&&specific.get('habittime')!=""&&specific.get('habittype')!=""){
+        if(specific.get('signal')!="" &&specific.get('habit')!=""&&specific.get('habittime')!=""&&specific.get('habittype')!=""){
             handleUpdateHabit(specific);
             handleClose();
         }else{

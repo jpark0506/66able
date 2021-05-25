@@ -9,7 +9,7 @@ function UserRouter(props) {
         <div>
             <CustomNavBar history={props.history} userid = {props.userid}></CustomNavBar>
             <Switch>
-                    <Route exact path={props.match.path}  component = {Auth(UserHabit,true)}>
+                    <Route path={props.match.path+'/:id'}  component = {Auth(UserHabit,true)}>
                     </Route>
             </Switch>
         </div>

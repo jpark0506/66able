@@ -5,6 +5,7 @@ import CreateHabitPage from './CreateHabitPage';
 import HabitMainPage from './HabitMainPage';
 import CustomNavBar from '../NavBar/CustomNavBar';
 import HabitManage from './HabitManage';
+import HabitView from './HabitView';
 
 
 function HabitRouter(props) {
@@ -17,6 +18,8 @@ function HabitRouter(props) {
                     <Route path={props.match.path+'/:id/create'}  component = {Auth(CreateHabitPage,true)}>
                     </Route>
                     <Route path={props.match.path+'/:habitid/manage'}  component = {Auth(HabitManage,true)}>
+                    </Route>
+                    <Route path={props.match.path+'/:habitid/view'}  component = {Auth(HabitView,true)}>
                     </Route>
             </Switch>
         </div>

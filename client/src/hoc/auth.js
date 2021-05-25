@@ -18,13 +18,15 @@ export default function (SpecificComponent, option, adminRoute = null){
 
         const [KakaoId, setKakaoId] = useState("")
 
+        const [Email, setEmail] = useState("")
+
         useEffect(()=> {
             {
                 const body = {token:localStorage.getItem('AC_Token')}
                 
                 dispatch(auth(body))
                 .then(res=>{
-                    console.log(res);
+                    //console.log(res);
                     if(!res.payload.isAuth){
                         if(localStorage.getItem('isAuth')){
                             setName(JSON.parse(localStorage.getItem('profile')).properties.nickname)
@@ -48,7 +50,7 @@ export default function (SpecificComponent, option, adminRoute = null){
                             }
                             
                             setId(res.payload._id);
-                            
+                            setEmail(res.payload.email);
                             setName(JSON.parse(localStorage.getItem('profile')).properties.nickname)
                             setKakaoId(JSON.parse(localStorage.getItem('profile')).id)
                         }
@@ -58,7 +60,8 @@ export default function (SpecificComponent, option, adminRoute = null){
 
 
         },[])
-        console.log(Id);
+        //console.log(Email);
+        //console.log(Id);
         return <SpecificComponent history = {props.history} userid = {Id} name = {Name} kakaoid = {KakaoId}/>;
     }
    return AuthenticationCheck;

@@ -5,6 +5,9 @@ import {Map,get,update,List,push} from 'immutable';
 function HabitList({list, handleHabitDelete}) {
     const [show, setShow] = useState(false);
     const [idx, setIdx] = useState(0);
+
+
+
     const handleClose = () => setShow(false);
     
     const handleDelete = (event) => {
@@ -54,8 +57,8 @@ function HabitList({list, handleHabitDelete}) {
                                     {`습관 시간 : ${item.get('habittime')}`}
                                </Card.Text>
                                <Card.Text>
-                                   {item.get('before').map(item=>{
-                                       return `${item}분전 알림 `
+                                   {item.get('before').map(value=>{
+                                       return `${value}분전 알림 `
                                    })}
                                </Card.Text>
                                <Button variant="info" className='mr-1'value={index} onClick={handleShow} disabled>
@@ -77,6 +80,7 @@ function HabitList({list, handleHabitDelete}) {
     return (
         <div>
             {renderList()}
+            
             <CreateHabitModal item={returnList()} show={show} handleClose={handleClose}></CreateHabitModal>
         </div>
     )

@@ -49,7 +49,7 @@ function RenderButton({AuthInfo,history, Auth, NickName,Provider,id}){
         </>
         )
     }else{
-        console.log(id);
+        //console.log(id);
         return(
             <>
                 <Nav className="mr-1" style={{ color:"white", fontWeight:"400"}}>
@@ -62,7 +62,7 @@ function RenderButton({AuthInfo,history, Auth, NickName,Provider,id}){
         
                     
                         <NavDropdown.Item>
-                            <Link to={`/manage`}>
+                            <Link to={`/manage/${id}`}>
                                 My Habits 
                             </Link>
                         </NavDropdown.Item>
@@ -92,19 +92,19 @@ function CustomNavBar(props) {
     useEffect(() => {
         dispatch(auth()).then(
             res=>{
-                console.log("NAV")
+                //console.log("NAV")
                 if(localStorage.getItem('isAuth')){
                     setAuth(localStorage.getItem('isAuth'))
                     setAuthInfo(JSON.parse(localStorage.getItem('profile')))
                     setNickName(JSON.parse(localStorage.getItem('profile')).properties.nickname);
                     setProvider(localStorage.getItem('provider'))
-                    console.log(Provider)
+                    //console.log(Provider)
                 }else{
                     setAuth(res.payload.isAuth);
                     setAuthInfo(res.payload);
                     setNickName(res.payload.isAuth.name);
                 }
-                console.log(props.userid);
+                //console.log(props.userid);
                 
             }
             

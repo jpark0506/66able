@@ -76,14 +76,19 @@ app.post("/api/kakao", async (req, res) => {
           .then((response) => {
             //전역변수에 프로파일 데이터 작성
             kakaodata.profile = response.data;
+            
             return response.data;
           })
-          .then((profile) => {
-            User.findOne({ kakaoid: profile.id }, async (err, user) => {
+          .then(async (profile) => {
+            console.log(profile);
+            await User.findOne({ email: profile.kakao_account.email }, async (err, user) => {
+              
+              console.log(user);
               if (!user) {
                 //받은 데이터의 카카오 아이디가 없다면
                 //provider->kakao
                 //role->0 (Non Admin)
+                
                 let body = {
                   provider: "kakao",
                   kakaoid: `${profile.id}`,
@@ -119,7 +124,7 @@ app.post("/api/kakao", async (req, res) => {
                 //토큰을 업데이트 해준다
                 try {
                   await User.updateOne(
-                    { kakaoid: profile.id },
+                    { email:profile.kakao_account.email },
                     { $set: { token: kakaodata.access_token } }
                   ).then(() =>
                     res
@@ -240,6 +245,21 @@ app.get("/api/habit/:num/:start", (req, res) => {
       .catch((err) => console.log(err));
   });
 });
+app.get("/api/habit/user/:id/:num/:start", (req,res)=>{
+  Habit.countDocuments((err, count)=> {
+    Habit.find({creator:req.params.id})
+      .populate("users")
+      .sort({ _id: -1 })
+      .limit(Number(req.params.num))
+      .skip(Number(req.params.start))
+      .then((data)=>{
+        let a = {total: count, data};
+        console.log(data);
+        res.json(a);
+      }).catch(err=>res.json(err))
+    })
+  })
+  
 app.get("/api/habit/:id", (req, res) => {
   Habit.findOne({ _id: req.params.id })
     .populate("users")

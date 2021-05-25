@@ -26,8 +26,10 @@ export function registerUser(data){
 }
 export function auth(data){
 
-    
-    const request = axios.post('api/users/auth',data)
+    const API = axios.create({
+        baseURL: `http://localhost:3000/`,
+      })
+    const request = API.post('api/users/auth',data)
     .then(res => res.data)
     
     return{

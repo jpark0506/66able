@@ -1,76 +1,46 @@
-import React from 'react'
-import {Button} from 'react-bootstrap';
+import React,{useEffect,useState} from 'react'
+import {Button,Pagination} from 'react-bootstrap';
 import {withRouter,Link} from 'react-router-dom';
 import HorizontalLine from '../../../utils/HorizontalLine'
 import HabitCard from '../Card/HabitCard';
+import axios from 'axios';
+import {List} from 'immutable';
 function HabitMainPage({match,userid,history}) {
 
-    const dummyData = [
-        {
-            "users": [],
-            "name": "금연",
-            "startdate": "2021-05-23",
-            "visibility": "private",
-            "habit": [
-                {
-                    "signal": "점심 먹은 후 피로할 때",
-                    "wronghabit": "담배",
-                    "habit": "산책",
-                    "habittime": "18:00",
-                    "before": [
-                        "1",
-                        "5"
-                    ],
-                    "success": [],
-                    "habittype": "0"
-                }
-            ],
-            "objective": "목표",
-            "tag": [
-                "건강",
-                "담배"
-            ],
-            "id":"60a0",
-            "creator": "60a3c224d22fc84c580872a1",
-            "description": "설명"
-        },
-        {
-            "users": [],
-            "name": "산책",
-            "startdate": "2021-05-23",
-            "visibility": "public",
-            "habit": [
-                {
-                    "signal": "퇴근한 후 게임을 하고 싶을 때",
-                    "wronghabit": "게임",
-                    "habit": "산책",
-                    "habittime": "18:00",
-                    "before": [
-                        "10",
-                        "5"
-                    ],
-                    "success": [],
-                    "habittype": "0"
-                }
-            ],
-            "objective": "건강한 몸, 게임하는 습관 버리기",
-            "tag": [
-                "건강",
-                "게임",
-                "산책"
-            ],
-            "id":"60a1",
-            "creator": "60a3c224d22fc84c580872a1",
-            "description": "설명"
-        }
-    ]
+    const [page,setPage] = useState(0);
+    const [total,setTotal] = useState(0);
+    const [pagination, setPagination] = useState(List([]))
+    const [tpage, setTPage] = useState(0);
+    const [items, setItems] = useState(List([]));
+    useEffect(()=>{
+        axios.get(`/api/habit/10/${page}`).then
+        (res=>{
+            setItems(res.data.data)
+            setTotal(res.data.total)
+            setTPage(parseInt(res.data.total/10+1));
+        })
+    },[])
+    const onUnSubscribeClick = (index) => {
+
+    }
+
+    const onSubscribeClick = async (index) =>{
+         
+    }
+
+    const onViewClick = (index) =>{
+        history.push(`habit/${items[index]._id}/view`)
+    }
+
     const onManageClick = (index) => {
-        history.push(`habit/${dummyData[index].id}/manage`)
+        // console.log(index)
+        history.push(`habit/${items[index]._id}/manage`)
         
     }
     const renderData = () => {
-        const list = dummyData.map((item,index) => {
-            if(item.visibility === 'public'){
+        //console.log(items);
+        const list = items.map((item,index) => {
+            if(item.visibility === "public"){
                 if(item.creator === userid){
                     return (
                     <div>
@@ -90,6 +60,9 @@ function HabitMainPage({match,userid,history}) {
                         subscribed = {true} 
                         item={item} 
                         index={index}
+                        onViewClick={onViewClick}
+                        onSubscribeClick={onSubscribeClick}
+                        onUnSubscribeClick={onUnSubscribeClick}
                         >
                         </HabitCard>
                         </div>
@@ -99,7 +72,10 @@ function HabitMainPage({match,userid,history}) {
                         <div>
                             <HabitCard 
                             creator={false} 
-                            subscribed={true} 
+                            subscribed={false} 
+                            onViewClick={onViewClick}
+                            onSubscribeClick={onSubscribeClick}
+                            onUnSubscribeClick={onUnSubscribeClick}
                             item={item} 
                             index={index}>
                                 
@@ -107,8 +83,6 @@ function HabitMainPage({match,userid,history}) {
                         </div>
                     )
                 }
-                
-                
             }
             
         })
@@ -134,6 +108,7 @@ function HabitMainPage({match,userid,history}) {
                 <div style={{display:'flex', width:'100%',height:'100%', justifyContent:'center', alignItems:'center', flexDirection:'column'}}>       
                     {renderData()}
                 </div>
+                
             </div>
         </div>
         

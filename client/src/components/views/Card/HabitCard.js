@@ -1,11 +1,20 @@
 import React from 'react'
 import {Card, Button} from 'react-bootstrap'
 
-function HabitCard({ creator, subscribed, item, index, onManageClick }) {
+function HabitCard({ creator, subscribed, item, index, onManageClick, onViewClick, onSubscribeClick, onUnSubscribeClick }) {
     
 
     const onManage = () => {
         onManageClick(index);
+    }
+    const onUnsub = ()=>{
+        onUnSubscribeClick(index);
+    }
+    const onSub = () => {
+        onSubscribeClick(index)
+    }
+    const onView = () => {
+        onViewClick(index)
     }
     
     const buttonHandler = () =>{
@@ -15,11 +24,18 @@ function HabitCard({ creator, subscribed, item, index, onManageClick }) {
             )
         }else if(!creator && subscribed){
             return (
-                <Button variant="primary">구독 취소하기</Button>
+                <div>
+                    <Button variant="primary" onClick = {onUnsub}>구독 취소하기</Button>
+                    <Button variant="primary" onClick = {onView}>보기</Button>
+                </div>
             )
         }else{
             return(
-                <Button variant="primary">구독하기</Button>
+                <div>
+                    <Button variant="primary" onClick={onSub}>구독하기</Button>
+                    <Button variant="primary" onClick = {onView}>보기</Button>
+                </div>
+                
             )
         }
             
