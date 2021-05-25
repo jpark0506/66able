@@ -178,7 +178,8 @@ app.post("/api/users/login", (req, res) => {
       }
       user.genToken((err, user) => {
         if (err) return res.status(400).send(err);
-        res.cookie("auth", user.token)
+        res
+          .cookie("auth", user.token)
           .status(200)
           .json({ loginSuccess: true, userId: user._id });
       });
@@ -186,25 +187,22 @@ app.post("/api/users/login", (req, res) => {
   });
 });
 //토큰 O 로그인중 토큰 X 로그인중이 아님
-app.post(/auth/,auth,(req,res)=>{
-    res.status(200).json({
-        
-        _id:req.user._id,
-        isAdmin: req.user.role === 0? false:true,
-        isAuth : true,
-        email : req.user.email,
-        name: req.user.name
-    })
-})
-//로그아웃 시 유저 아이디를 검색, 해당하는 유저의 토큰을 "" 로 삭제 
-app.get('/api/users/logout',auth,(req,res)=>{
-
-// app.get('api/users/:id/profile',(req,res)=>{
-//     req.params .id
-// })
-
-// api post
-})
+app.post(/auth/, auth, (req, res) => {
+  res.status(200).json({
+    _id: req.user._id,
+    isAdmin: req.user.role === 0 ? false : true,
+    isAuth: true,
+    email: req.user.email,
+    name: req.user.name,
+  });
+});
+//로그아웃 시 유저 아이디를 검색, 해당하는 유저의 토큰을 "" 로 삭제
+app.get("/api/users/logout", auth, (req, res) => {
+  // app.get('api/users/:id/profile',(req,res)=>{
+  //     req.params .id
+  // })
+  // api post
+});
 app.get("/api/post", (req, res) => {
   Post.find()
     .populate("author")
@@ -369,6 +367,21 @@ app.delete("/api/habit/delete/:id", (req, res) => {
   }
 });
 
+//api fcm 토큰 전달 (로그인 이후 fcm 토큰 발급 받은것)
+app.post("/api/fcm/:token", (req, res) => {
+  var auth_cookie = req.cookies.auth;
+  if (auth_cookie != "") {
+    User.findOneAndUpdate(
+      { token: auth_cookie },
+      { fcm_token: req.params.token }
+    )
+      .then(() => res.status(200).json({ habitSuccess: true }))
+      .catch((err) => res.json({ habitSuccess: false, err: err }));
+  } else {
+    res.status(500).json({ habitSuccess: false, err: "로그인 안됨" });
+  }
+});
+
 // api manage
 
 app.get("api/manage/users", (req, res) => {
@@ -383,4 +396,6 @@ app.get("api/manage/posts", (req, res) => {
   });
 });
 
-app.listen(port, () => {console.log(`App listening at ${port}`)})
+app.listen(port, () => {
+  console.log(`App listening at ${port}`);
+});

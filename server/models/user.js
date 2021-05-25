@@ -43,6 +43,7 @@ const userSchema = mongoose.Schema({
     type: Number,
   },
   habits: [{ type: mongoose.Types.ObjectId, ref: "Habit" }],
+  fcm_token: { type: String },
 });
 
 userSchema.pre("save", function (next) {
