@@ -71,7 +71,7 @@ function LoginPage(props) {
                                 <Form.Label>Password</Form.Label>
                                 <Form.Control type="password" placeholder="Password" onChange={onPasswordHandler}/>
                             </Form.Group>
-                            <Button size = 'lg' variant="primary" type="submit" >
+                            <Button size = 'lg' variant="primary" type="submit" disabled>
                                 Submit
                             </Button>
                         </Form>
