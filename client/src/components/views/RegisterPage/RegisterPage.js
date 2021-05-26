@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import {registerUser} from '../../../_actions/user_action';
 import CustomNavBar from '../NavBar/CustomNavBar';
 import { Button ,Form, Col, Row,Image} from 'react-bootstrap';
+import Footer from '../Footer/Footer';
 const {Kakao} = window;
 function RegisterPage(props) {
     const dispatch = useDispatch();

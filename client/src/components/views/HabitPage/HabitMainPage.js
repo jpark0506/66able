@@ -15,17 +15,26 @@ function HabitMainPage({match,userid,history}) {
     useEffect(()=>{
         axios.get(`/api/habit/10/${page}`).then
         (res=>{
+            console.log(res.data.data);
             setItems(res.data.data)
             setTotal(res.data.total)
             setTPage(parseInt(res.data.total/10+1));
         })
     },[])
-    const onUnSubscribeClick = (index) => {
 
+
+    const onUnSubscribeClick = (index) => {
+        axios.post(`/api/habit/quit/${items[index]._id}`)
+        .then(res=>console.log(res))
+        .catch(err=>console.log(err))
+        window.location.reload();
     }
 
     const onSubscribeClick = async (index) =>{
-         
+         axios.post(`/api/habit/join/${items[index]._id}`)
+         .then(res=>console.log(res))
+        .catch(err=>console.log(err))
+        window.location.reload();
     }
 
     const onViewClick = (index) =>{
@@ -36,6 +45,16 @@ function HabitMainPage({match,userid,history}) {
         // console.log(index)
         history.push(`habit/${items[index]._id}/manage`)
         
+    }
+    const onCheckSub = (item) => {
+        let flag = false
+        for(let val of item.users){
+            if(val._id == userid){
+                flag = true;
+                break;
+            }
+        }
+        return flag;
     }
     const renderData = () => {
         //console.log(items);
@@ -52,7 +71,7 @@ function HabitMainPage({match,userid,history}) {
                         onManageClick={onManageClick}>   
                         </HabitCard>
                     </div>)
-                }else if(item.users.includes(userid) && item.creator !== userid){
+                }else if(onCheckSub(item) && item.creator !== userid){
                     return (
                         <div>
                         <HabitCard
@@ -63,6 +82,7 @@ function HabitMainPage({match,userid,history}) {
                         onViewClick={onViewClick}
                         onSubscribeClick={onSubscribeClick}
                         onUnSubscribeClick={onUnSubscribeClick}
+                        onManageClick={onManageClick}
                         >
                         </HabitCard>
                         </div>

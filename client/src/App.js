@@ -15,8 +15,21 @@ import {
   Route
 } from "react-router-dom";
 import Auth from './hoc/auth';
+import axios from 'axios';
+import firebase from "firebase/app";
+import {firebaseConfig} from './config';
+import { getMessaging, getToken } from "firebase/messaging";
+
+firebase.initializeApp(firebaseConfig);
+const messaging = firebase.messaging();
+
+messaging.onMessage(function(payload){
+	console.log(payload.notification.title);
+	console.log(payload.notification.body);
+})
 
 function App() {
+  
   return (
     <Router>
       <div>

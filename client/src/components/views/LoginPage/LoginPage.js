@@ -5,6 +5,7 @@ import {withRouter} from 'react-router-dom';
 import CustomNavBar from '../NavBar/CustomNavBar';
 import { Container,Row,Col,Form,FormControl,Button,Image } from 'react-bootstrap';
 import {center,backgroundcenter,inputStyle, buttonStyle, formStyle} from '../../../style/style'
+import Footer from '../Footer/Footer';
 const {Kakao} = window;
 function LoginPage(props) {
 
@@ -86,6 +87,7 @@ function LoginPage(props) {
                 </Row>
                 
             </Container>
+            <Footer></Footer>
         </Container>
 
             

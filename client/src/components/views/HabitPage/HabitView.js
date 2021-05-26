@@ -79,7 +79,7 @@ function HabitView({history}) {
         </Button>
         </div>
         <div style={{ width:'100vw', display:'flex', flexDirection:'row', height:'100vh'}}>
-        <div style = {{width:'50vw',padding:'20px'}}>      
+        <div style = {{width:'100vw',padding:'20px'}}>      
             
             <div className ="m-1">
                 <h1>

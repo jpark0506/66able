@@ -22,7 +22,8 @@ function CreateHabitPage(props) {
         "habit":List([]),
         "tag":List([]),
         "achievement":List([Map({
-            [id.id]:List(Array.from({length:66}, ()=>0))
+            "userid":[id.id],
+            "data":List(Array.from({length:66}, ()=>0))
         })]),
     })
     

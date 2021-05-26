@@ -5,6 +5,7 @@ import CreatePage from './CreatePage';
 import PostPage from './PostPage';
 import CustomNavBar from '../NavBar/CustomNavBar';
 import ViewPostPage from './ViewPostPage';
+import Footer from '../Footer/Footer';
 function PostRouter(props) {
     return (
         <div>
@@ -17,7 +18,9 @@ function PostRouter(props) {
                     <Route path={`${props.match.path}/:postid`} component = {Auth(ViewPostPage,null)}>
                     </Route>
             </Switch>
+            <Footer></Footer>
         </div>
+
     )
 }
 

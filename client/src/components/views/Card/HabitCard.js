@@ -25,15 +25,15 @@ function HabitCard({ creator, subscribed, item, index, onManageClick, onViewClic
         }else if(!creator && subscribed){
             return (
                 <div>
-                    <Button variant="primary" onClick = {onUnsub}>구독 취소하기</Button>
-                    <Button variant="primary" onClick = {onView}>보기</Button>
+                    <Button variant="primary" className = "m-1" onClick = {onUnsub}>구독 취소하기</Button>
+                    <Button variant="primary" className = "m-1" onClick = {onManage}>관리하기</Button>
                 </div>
             )
         }else{
             return(
                 <div>
-                    <Button variant="primary" onClick={onSub}>구독하기</Button>
-                    <Button variant="primary" onClick = {onView}>보기</Button>
+                    <Button variant="primary" className = "m-1" onClick={onSub}>구독하기</Button>
+                    <Button variant="primary" className = "m-1" onClick = {onView}>보기</Button>
                 </div>
                 
             )

@@ -34,7 +34,7 @@ app.use(cookieParser());
 app.get("/api/kakao/logout/:id", (req, res) => {
   let id = req.params.id;
   //토큰이 없으면 로그아웃 상태로 판정합니다!
-  User.findOneAndUpdate({ kakaoid: id }, { token: "" }, (err, user) => {
+  User.findOneAndUpdate({ _id: id }, { token: "" }, (err, user) => {
     if (err) {
       return res.json({ success: false, err });
     }
@@ -64,6 +64,7 @@ app.post("/api/kakao", async (req, res) => {
       .then((data) => data.data)
       .then(async (data) => {
         kakaodata.access_token = data.access_token;
+        
         //토큰을 이용해서 개인정보를 받아 올 수 있는 api
         await axios({
           method: "post",
@@ -80,15 +81,15 @@ app.post("/api/kakao", async (req, res) => {
             return response.data;
           })
           .then(async (profile) => {
-            console.log(profile);
+            
             await User.findOne({ email: profile.kakao_account.email }, async (err, user) => {
               
-              console.log(user);
+
               if (!user) {
                 //받은 데이터의 카카오 아이디가 없다면
                 //provider->kakao
                 //role->0 (Non Admin)
-                
+                console.log(user);
                 let body = {
                   provider: "kakao",
                   kakaoid: `${profile.id}`,
@@ -124,7 +125,7 @@ app.post("/api/kakao", async (req, res) => {
                 //토큰을 업데이트 해준다
                 try {
                   await User.updateOne(
-                    { email:profile.kakao_account.email },
+                    { email: profile.kakao_account.email },
                     { $set: { token: kakaodata.access_token } }
                   ).then(() =>
                     res

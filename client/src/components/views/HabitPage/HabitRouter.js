@@ -6,7 +6,7 @@ import HabitMainPage from './HabitMainPage';
 import CustomNavBar from '../NavBar/CustomNavBar';
 import HabitManage from './HabitManage';
 import HabitView from './HabitView';
-
+import Footer from '../Footer/Footer';
 
 function HabitRouter(props) {
     return (
@@ -22,6 +22,7 @@ function HabitRouter(props) {
                     <Route path={props.match.path+'/:habitid/view'}  component = {Auth(HabitView,true)}>
                     </Route>
             </Switch>
+            <Footer></Footer>
         </div>
     )
 }

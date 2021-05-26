@@ -27,45 +27,67 @@ function UserHabit({history,userid}) {
 
     const onDeleteHandler = (index) => {
         if(window.confirm("삭제하시겠습니까?")){
-            axios.delete(data[index].id)
+            const API = axios.create({
+                baseURL: `http://localhost:3000/`,
+              })
+            API.delete(`api/habit/delete/${data[index]._id}`)
             .then(res=>console.log(res))
             .catch(err=>{
                 console.error(err);
                 alert('falied');
             })
+            window.location.reload();
         }
         
     }
     
     const renderData = () => {
-        const list = data.map((item,index) => {
-            if(item.visibility === 'public'){
-                return (
-                <div>
-                    <UserCard 
-                    item={item} 
-                    index={index}
-                    onViewHandler = {onViewHandler}
-                    onDeleteHandler={onDeleteHandler}></UserCard>
+        if(data!==undefined){
+            if(data.length===0){
+                return <div>
+                    등록하신 습관이 없네요 새로 추가해보세요!
                 </div>
-                )
+            }else{
+                const list = data.map((item,index) => {
                 
-            }else if(item.visibility === 'private'){
-                return(
-                <div>
-                     <UserCard 
-                     item={item} 
-                     index={index}
-                     onViewHandler = {onViewHandler}
-                     onDeleteHandler={onDeleteHandler}></UserCard>
-                </div>
-                )
+                    if(item.visibility === 'public'){
+                        return (
+                        <div>
+                            <UserCard 
+                            item={item} 
+                            index={index}
+                            onViewHandler = {onViewHandler}
+                            onDeleteHandler={onDeleteHandler}></UserCard>
+                        </div>
+                        )
+                        
+                    }else if(item.visibility === 'private'){
+                        return(
+                        <div>
+                            <UserCard 
+                            item={item} 
+                            index={index}
+                            onViewHandler = {onViewHandler}
+                            onDeleteHandler={onDeleteHandler}></UserCard>
+                        </div>
+                        )
+                    }
+                })
+                return list;
             }
             
-        })
+        }else{
+            return <div></div>
+        }
+    } 
+        
+    const push = () => {
+        history.replace(`habit/${userid}/create`)
+    }
+        
 
-        return list;
-    }  
+        
+    
     return (
         
         <div style={{marginLeft:'200px', marginRight:'200px', marginTop:'20px'}}>
@@ -73,11 +95,10 @@ function UserHabit({history,userid}) {
                 <h1>
                     내 습관
                 </h1>  
-                <Link to={`habit/${id.id}/create`} style={{}}>
-                            <Button variant="primary" size="lg" >
+                            <Button variant="primary" size="lg" onClick={push}>
                                 Create Habit
                             </Button>
-                </Link>
+                
             </div>
             
             <HorizontalLine></HorizontalLine>   

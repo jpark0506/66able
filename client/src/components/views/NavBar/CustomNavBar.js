@@ -10,7 +10,7 @@ function RenderButton({AuthInfo,history, Auth, NickName,Provider,id}){
     //props {history, Auth}
     const onClickHandler = () => {
         if(Provider==="kakao"){
-            axios.get(`/api/kakao/logout/${AuthInfo.id}`).then(res=>{
+            axios.get(`/api/kakao/logout/${id}`).then(res=>{
                 if(res.data.success){
                     localStorage.clear();
                     Kakao.Auth.logout(()=>{
@@ -21,6 +21,7 @@ function RenderButton({AuthInfo,history, Auth, NickName,Provider,id}){
                     alert('로그아웃 실패');
                 }
             })
+            
         }else{
             axios.get('/api/users/logout').then(res=>{
                 if(res.data.success){
