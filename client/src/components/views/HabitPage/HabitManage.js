@@ -55,7 +55,7 @@ function HabitManage(props) {
                             <Card style={{ width: '100%', margin:'10px'}}>
                             <Card.Body>
                                 <Card.Title>{item.habit}</Card.Title>
-                                <Card.Subtitle className="mb-2 text-muted">{item.habit}</Card.Subtitle>
+                            
                                 <Card.Text>
                                         {item.wronghabit}
                                 </Card.Text>
