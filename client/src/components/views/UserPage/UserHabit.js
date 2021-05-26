@@ -14,6 +14,7 @@ function UserHabit({history,userid}) {
         axios.get(`/api/habit/user/${id.id}/10/${page}`).then(
             res=>setData(res.data.data)
         )
+        
     },[])
 
 
@@ -42,6 +43,7 @@ function UserHabit({history,userid}) {
     }
     
     const renderData = () => {
+        console.log(data);
         if(data!==undefined){
             if(data.length===0){
                 return <div>
@@ -51,26 +53,51 @@ function UserHabit({history,userid}) {
                 const list = data.map((item,index) => {
                 
                     if(item.visibility === 'public'){
-                        return (
-                        <div>
-                            <UserCard 
-                            item={item} 
-                            index={index}
-                            onViewHandler = {onViewHandler}
-                            onDeleteHandler={onDeleteHandler}></UserCard>
-                        </div>
-                        )
+                        if(item.creator !== userid){
+                            return (
+                                <div>
+                                    <UserCard 
+                                    item={item} 
+                                    index={index}
+                                    onViewHandler = {onViewHandler}
+                                    ></UserCard>
+                                </div>
+                                )
+                        }else{
+                            return (
+                                <div>
+                                    <UserCard 
+                                    item={item} 
+                                    index={index}
+                                    onViewHandler = {onViewHandler}
+                                    onDeleteHandler={onDeleteHandler}></UserCard>
+                                </div>
+                                )
+                        }
+                        
                         
                     }else if(item.visibility === 'private'){
-                        return(
-                        <div>
-                            <UserCard 
-                            item={item} 
-                            index={index}
-                            onViewHandler = {onViewHandler}
-                            onDeleteHandler={onDeleteHandler}></UserCard>
-                        </div>
-                        )
+                        if(item.creator !== userid){
+                            return (
+                                <div>
+                                    <UserCard 
+                                    item={item} 
+                                    index={index}
+                                    onViewHandler = {onViewHandler}
+                                    ></UserCard>
+                                </div>
+                                )
+                        }else{
+                            return (
+                                <div>
+                                    <UserCard 
+                                    item={item} 
+                                    index={index}
+                                    onViewHandler = {onViewHandler}
+                                    onDeleteHandler={onDeleteHandler}></UserCard>
+                                </div>
+                                )
+                        }
                     }
                 })
                 return list;

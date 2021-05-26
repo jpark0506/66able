@@ -248,7 +248,7 @@ app.get("/api/habit/:num/:start", (req, res) => {
 });
 app.get("/api/habit/user/:id/:num/:start", (req,res)=>{
   Habit.countDocuments((err, count)=> {
-    Habit.find({creator:req.params.id})
+    Habit.find({ $or: [{creator:req.params.id}, {users:{ $all : [req.params.id]}}] })
       .populate("users")
       .sort({ _id: -1 })
       .limit(Number(req.params.num))
